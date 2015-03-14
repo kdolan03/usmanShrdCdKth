@@ -3,6 +3,7 @@ import java.io.{FileNotFoundException, PrintWriter, UnsupportedEncodingException
 import State.length0
 
 import scala.beans.BeanProperty
+import scala.collection.mutable.ArrayBuffer
 
 class State(@BeanProperty var player: Player, @BeanProperty var board: Board, @BeanProperty var lastMove: Move)
   extends Comparable[Any] {
@@ -12,8 +13,30 @@ class State(@BeanProperty var player: Player, @BeanProperty var board: Board, @B
 
   @BeanProperty
   var value: Int = 0
+  
+  /**
+   * Gets an array of all the possible moves for this player,
+   * iterates through each one, creating a board which is a  
+   * copy of the current board, and makes the appropriate move.
+   * The resultant boards are stored, along with the players
+   * opponent, in the children array. 
+   */
 
   def initializeChildren() {
+    
+  var moves = board.getPossibleMoves(player);
+    
+  // Copy the current board, make the next move, and store in the
+  // children array. Use ArrayBuffer to append elements to the array
+  
+    val childArray = ArrayBuffer[State]()
+  
+    for (m <- 0 until moves.length) {
+      var b = new Board(board)
+      b.makeMove(moves(m))
+      childArray += new State(player.opponent, b, moves(m))
+    }
+    children = childArray.toArray
   }
 
   def writeToFile() {
