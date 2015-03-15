@@ -32,10 +32,21 @@ class AI(private var player: Player, private var depth: Int) extends Solver {
 
 object AI {
 
-  def createGameTree(s: State, d: Int) = ???
+  def createGameTree(s: State, d: Int) : Unit = {
+    
+    if (d != 0) {        // Still at    
+      var children = s.getChildren()
+      if (!children.isEmpty) {    // Not a leaf, has children
+        for (si <- children) {
+          si.initializeChildren()
+          createGameTree(si, (d-1))
+        }
+      }
+    }
+  }
 
   def minimax(ai: AI, s: State) {
     ai.minimax(s)
-  }
+}
 }
 
