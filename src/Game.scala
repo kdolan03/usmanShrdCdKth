@@ -165,6 +165,21 @@ object Game extends App {
 
   val p1 = Dummy(RED)
   val p2 = Dummy(YELLOW)
+  
+  /******* Test getPossibleMoves ******/
+  val b: Board = Board() 
+  b.makeMove(new Move(RED, 0))
+  b.makeMove(new Move(YELLOW, 0))
+  b.makeMove(new Move(RED, 0))
+  b.makeMove(new Move(YELLOW, 0))
+  b.makeMove(new Move(RED, 0))
+  b.makeMove(new Move(YELLOW, 0))
+  for(mv <- b.getPossibleMoves(YELLOW)) // get all possible moves for player
+   println(mv)
+  println(b) // print board  
+    
+  /******************/
+  
   val game = Game(p1, p2)
   private val SLEEP_INTERVAL = 10
   game.runGame()

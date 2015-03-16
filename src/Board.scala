@@ -30,11 +30,9 @@ class Board {
     // from bottom row (Board.NUM_ROWS - 1) to 0 (top row)
     // Note: No benefit in calling getTile here
 
-    for (r <- Board.NUM_ROWS - 1 to 0 by -1) {
-      if (board(r)(move.column) == null) {
-        board(r)(move.column) = move.player
-        return
-      }
+    for (r <- Board.NUM_ROWS - 1 to 0 by -1 if (board(r)(move.column) == null)) {
+      board(r)(move.column) = move.player
+      return
     } 
   }
 
@@ -52,15 +50,15 @@ class Board {
      */
 
   def getPossibleMoves(p: Player): Array[Move] = {
-    
     val moves = ArrayBuffer[Move]()
-  
-    for (c <- 0 until Board.NUM_COLS) {
-      for (r <- Board.NUM_ROWS - 1 to 0 by -1) {
-        if (board(r)(c) == null) {
-          moves += new Move(p, c)       
-        }
-      } 
+    var found: Boolean = false
+    for (c <- 0 until Board.NUM_COLS){
+      for(r <- Board.NUM_ROWS - 1 to 0 by -1 if(!found)
+          if(board(r)(c) == null)){ 
+          moves += new Move(p, c)
+          found = true
+      }
+      found = false
     }
     moves.toArray
   }
