@@ -163,26 +163,69 @@ class Game(private var activePlayer: Solver, private var player2: Solver) {
 
 object Game extends App {
 
-  val p1 = Dummy(RED)
-  val p2 = Dummy(YELLOW)
+//  val p1 = Dummy(RED)
+//  val p2 = Dummy(YELLOW)
+  
+  val p1 = new AI(RED, 4)
+  val p2 = new AI(YELLOW, 4)
+  val game = Game(p1, p2)
+  val b: Board = Board()
+  val move1: Move = new Move(RED, 0)
+  val move2: Move = new Move(YELLOW, 1)
+  val move3: Move = new Move(RED, 2)
+  b.makeMove(move1)
+  b.makeMove(move2)
+  b.makeMove(move3)
+  
+  val rootState: State = new State(RED, b, move3) 
+  rootState.initializeChildren()
+  rootState.writeToFile()
+  AI.createGameTree(rootState, 4)
+  AI.minimax(p1, rootState)
+  
   
   /******* Test getPossibleMoves ******/
-  val b: Board = Board() 
-  b.makeMove(new Move(RED, 0))
-  b.makeMove(new Move(YELLOW, 0))
-  b.makeMove(new Move(RED, 0))
-  b.makeMove(new Move(YELLOW, 0))
-  b.makeMove(new Move(RED, 0))
-  b.makeMove(new Move(YELLOW, 0))
-  for(mv <- b.getPossibleMoves(YELLOW)) // get all possible moves for player
-   println(mv)
-  println(b) // print board  
-    
-  /******************/
+//  val b: Board = Board() 
+//  b.makeMove(new Move(RED, 0))
+//  b.makeMove(new Move(YELLOW, 0))
+//  b.makeMove(new Move(RED, 0))
+//  b.makeMove(new Move(YELLOW, 0))
+//  b.makeMove(new Move(RED, 0))
+//  
+//  b.makeMove(new Move(RED, 1))
+//  b.makeMove(new Move(YELLOW, 1))
+//  b.makeMove(new Move(RED, 1))
+//  b.makeMove(new Move(YELLOW, 1))
+//  b.makeMove(new Move(RED, 1))
+//  
+//  
+//  b.makeMove(new Move(RED, 4))
+//  b.makeMove(new Move(YELLOW, 4))
+//  b.makeMove(new Move(RED, 4))
+//  b.makeMove(new Move(YELLOW, 4))
+//  b.makeMove(new Move(RED, 4))
+//  b.makeMove(new Move(RED, 4))
+//  
+//  b.makeMove(new Move(RED, 5))
   
-  val game = Game(p1, p2)
+//  b.makeMove(new Move(YELLOW, 0))
+//  for(mv <- b.getPossibleMoves(YELLOW)) // get all possible moves for player
+//   println(mv)
+//  println(b) // print board  
+    
+  /******************************/
+  
+  /** Test initializeChildren ***/
+  
+  
+  
+  
+  
+  /******************************/
+  
+//  val game = Game(p1, p2)
   private val SLEEP_INTERVAL = 10
-  game.runGame()
+//  game.runGame()
 
   def apply(p1: Solver, p2: Solver) =
     new Game(p1, p2)

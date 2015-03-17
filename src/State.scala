@@ -1,9 +1,11 @@
-import java.io.{FileNotFoundException, PrintWriter, UnsupportedEncodingException}
-
-import State.length0
+import java.io.FileNotFoundException
+import java.io.PrintWriter
+import java.io.UnsupportedEncodingException
 
 import scala.beans.BeanProperty
 import scala.collection.mutable.ArrayBuffer
+
+import State.length0
 
 class State(@BeanProperty var player: Player, @BeanProperty var board: Board, @BeanProperty var lastMove: Move)
   extends Comparable[Any] {
@@ -24,7 +26,7 @@ class State(@BeanProperty var player: Player, @BeanProperty var board: Board, @B
 
   def initializeChildren() {
     
-  var moves = board.getPossibleMoves(player);
+  var moves = board.getPossibleMoves(player.opponent);
     
   // Copy the current board, make the next move, and store in the
   // children array. Use ArrayBuffer to append elements to the array
@@ -37,35 +39,37 @@ class State(@BeanProperty var player: Player, @BeanProperty var board: Board, @B
       childArray += new State(player.opponent, b, moves(m))
     }
     children = childArray.toArray
+    
+    
   }
 
   def writeToFile() {
-    var writer: PrintWriter = null
-    
-    try {
-      writer = new PrintWriter("output.txt", "UTF-8")
-      writer.println(this)
-    } catch {
-      case e@(_: FileNotFoundException | _: UnsupportedEncodingException) => e.printStackTrace()
-    } finally {
-      writer.close();
-    }
+	  var writer: PrintWriter = null
+			  try {
+				  writer = new PrintWriter("output.txt", "UTF-8")
+				  writer.println(this)
+			  } catch {
+			  case e@(_: FileNotFoundException | _: UnsupportedEncodingException) => e.printStackTrace()
+			  } finally {
+				  writer.close();
+			  }
   }
 
   override def toString(): String = {
     println("State.toString printing")
     toStringHelper(0, "")
   }
+  
 
   override def compareTo(o: Any): Int = ???
 
   private def toStringHelper(d: Int, ind: String): String = {
-    var str = ind + player + " to play\n"
-    str = str + ind + "Value: " + value + "\n"
-    str = str + board.toString(ind) + "\n"
+    var str = ind + player + " to play"+System.lineSeparator()
+    str = str + ind + "Value: " + value + System.lineSeparator()
+    str = str + board.toString(ind) + System.lineSeparator()
     if (children != null && children.length > 0) {
       str = str + ind + "Children at depth " + (d + 1) + ":\n" + ind +
-        "----------------\n"
+        "----------------" + System.lineSeparator()
       for (s <- children) {
         str = str + s.toStringHelper(d + 1, ind + "   ")
       }

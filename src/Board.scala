@@ -51,14 +51,9 @@ class Board {
 
   def getPossibleMoves(p: Player): Array[Move] = {
     val moves = ArrayBuffer[Move]()
-    var found: Boolean = false
     for (c <- 0 until Board.NUM_COLS){
-      for(r <- Board.NUM_ROWS - 1 to 0 by -1 if(!found)
-          if(board(r)(c) == null)){ 
+          if(board(0)(c) == null) // check the first/topmost entry in the column, if it's null/empty, move is possible
           moves += new Move(p, c)
-          found = true
-      }
-      found = false
     }
     moves.toArray
   }
@@ -78,7 +73,7 @@ class Board {
           str.append("Y|")
         }
       }
-      str.append("\n")
+      str.append(System.lineSeparator())
     }
     str.toString
   }
