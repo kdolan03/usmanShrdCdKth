@@ -1,11 +1,10 @@
 import java.io.FileNotFoundException
 import java.io.PrintWriter
 import java.io.UnsupportedEncodingException
-
 import scala.beans.BeanProperty
 import scala.collection.mutable.ArrayBuffer
-
 import State.length0
+import java.io.FileWriter
 
 class State(@BeanProperty var player: Player, @BeanProperty var board: Board, @BeanProperty var lastMove: Move)
   extends Comparable[Any] {
@@ -68,7 +67,7 @@ class State(@BeanProperty var player: Player, @BeanProperty var board: Board, @B
     str = str + ind + "Value: " + value + System.lineSeparator()
     str = str + board.toString(ind) + System.lineSeparator()
     if (children != null && children.length > 0) {
-      str = str + ind + "Children at depth " + (d + 1) + ":\n" + ind +
+      str = str + ind + "Children at depth " + (d + 1) + ":" + System.lineSeparator() + ind +
         "----------------" + System.lineSeparator()
       for (s <- children) {
         str = str + s.toStringHelper(d + 1, ind + "   ")

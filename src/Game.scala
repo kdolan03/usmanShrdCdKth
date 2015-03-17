@@ -177,11 +177,12 @@ object Game extends App {
   b.makeMove(move2)
   b.makeMove(move3)
   
-  val rootState: State = new State(RED, b, move3) 
+  val rootState: State = new State(YELLOW, b, move3) 
   rootState.initializeChildren()
-  rootState.writeToFile()
   AI.createGameTree(rootState, 4)
-  AI.minimax(p1, rootState)
+//  rootState.writeToFile()
+  AI.minimax(p2, rootState)
+  rootState.writeToFile()
   
   
   /******* Test getPossibleMoves ******/
