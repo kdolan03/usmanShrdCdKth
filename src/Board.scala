@@ -26,7 +26,7 @@ class Board {
   }
 
   def makeMove(move: Move): Unit = {
-    // Find the first empty slot from the BOTTOM, so decrement
+    // Find the empty slot from the BOTTOM, so decrement
     // from bottom row (Board.NUM_ROWS - 1) to 0 (top row)
     // Note: No benefit in calling getTile here
 

@@ -67,10 +67,8 @@
          * enough that so you are positive the method works.
          * 
          * 
-        }
          * 
          * */
-
 
 class Game(private var activePlayer: Solver, private var player2: Solver) {
 
@@ -99,7 +97,7 @@ class Game(private var activePlayer: Solver, private var player2: Solver) {
     }
   }
 
-  def runGame() {
+    def runGame() {
     while (!isGameOver) {
       var moveIsSafe = false
       var nextMove: Move = null
@@ -143,7 +141,7 @@ class Game(private var activePlayer: Solver, private var player2: Solver) {
       gui.notifyGameOver(winner.get)
     }
   }
-
+    
   def isGameOver(): Boolean = {
     winner = board.hasConnectFour()
 
@@ -159,16 +157,81 @@ class Game(private var activePlayer: Solver, private var player2: Solver) {
     }
     true
   }
+  
+  def test() = {
+    val b: Board = new Board() 
+    b.makeMove(new Move(RED, 0))
+    b.makeMove(new Move(RED, 0))
+    b.makeMove(new Move(RED, 0))
+    //b.makeMove(new Move(RED, 0))
+    //b.makeMove(new Move(RED, 0))
+    /*
+    b.makeMove(new Move(YELLOW, 0))
+    var moves = b.getPossibleMoves(RED);
+    
+    if (moves.length != Board.NUM_COLS-1) {
+      System.out.println("Error in getPossibleMoves with 1 col filled. array size is wrong: " +  moves.length);
+    }
+    if (moves(0).column != 1) {
+      System.out.println("First col is filled, second isn't but moves[0] is " + moves(0).column);
+    }
+    * 
+    */
+    
+    var s = new State(RED, b, new Move(YELLOW, 0))
+    AI.createGameTree(s, 1)
+    
+    /*
+    
+    
+    b.makeMove(new Move(YELLOW, 1))
+    b.makeMove(new Move(RED, 1))
+    b.makeMove(new Move(YELLOW, 1))
+    b.makeMove(new Move(RED, 4))
+    b.makeMove(new Move(YELLOW, 4))
+    b.makeMove(new Move(RED, 4))
+    b.makeMove(new Move(YELLOW, 4))
+    b.makeMove(new Move(RED, 4))
+    */
+  }
 }
 
 object Game extends App {
 
+  val p1 = Dummy(RED)
+  val p2 = Dummy(YELLOW)
+  val game = Game(p1, p2)
+  game.test()
+  
+  private val SLEEP_INTERVAL = 10
+  //game.runGame()
+
+  def apply(p1: Solver, p2: Solver) =
+    new Game(p1, p2)
+}
+
+
+
+
+
+/*
+
+object Game extends App {
+  
+  val p1 = Dummy(RED)
+  val p2 = Dummy(YELLOW)
+  val game = Game(p1, p2)
+  private val SLEEP_INTERVAL = 10
+  game.runGame()
+
+  def apply(p1: Solver, p2: Solver) =
+    new Game(p1, p2)
 //  val p1 = Dummy(RED)
 //  val p2 = Dummy(YELLOW)
   
-  val p1 = new AI(RED, 4)
-  val p2 = new AI(YELLOW, 4)
-  val game = Game(p1, p2)
+//  val p1 = new AI(RED, 4)
+//  val p2 = new AI(YELLOW, 4)
+//  val game = Game(p1, p2)
   val b: Board = Board()
   val move1: Move = new Move(RED, 0)
   val move2: Move = new Move(YELLOW, 1)
@@ -185,50 +248,10 @@ object Game extends App {
   rootState.writeToFile()
   
   
-  /******* Test getPossibleMoves ******/
-//  val b: Board = Board() 
-//  b.makeMove(new Move(RED, 0))
-//  b.makeMove(new Move(YELLOW, 0))
-//  b.makeMove(new Move(RED, 0))
-//  b.makeMove(new Move(YELLOW, 0))
-//  b.makeMove(new Move(RED, 0))
-//  
-//  b.makeMove(new Move(RED, 1))
-//  b.makeMove(new Move(YELLOW, 1))
-//  b.makeMove(new Move(RED, 1))
-//  b.makeMove(new Move(YELLOW, 1))
-//  b.makeMove(new Move(RED, 1))
-//  
-//  
-//  b.makeMove(new Move(RED, 4))
-//  b.makeMove(new Move(YELLOW, 4))
-//  b.makeMove(new Move(RED, 4))
-//  b.makeMove(new Move(YELLOW, 4))
-//  b.makeMove(new Move(RED, 4))
-//  b.makeMove(new Move(RED, 4))
-//  
-//  b.makeMove(new Move(RED, 5))
-  
-//  b.makeMove(new Move(YELLOW, 0))
+
 //  for(mv <- b.getPossibleMoves(YELLOW)) // get all possible moves for player
 //   println(mv)
 //  println(b) // print board  
     
-  /******************************/
-  
-  /** Test initializeChildren ***/
-  
-  
-  
-  
-  
-  /******************************/
-  
-//  val game = Game(p1, p2)
-  private val SLEEP_INTERVAL = 10
-//  game.runGame()
-
-  def apply(p1: Solver, p2: Solver) =
-    new Game(p1, p2)
-}
+*/
 

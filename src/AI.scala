@@ -61,14 +61,16 @@ object AI {
    * Note: If s has a winner (four in a row), it should be a leaf.
    */
 	def createGameTree(s: State, d: Int) : Unit = {
-			if (d != 0) { // Still at
+			if (d != 0) {                       // Still within depth
+        s.initializeChildren()
 				var children = s.getChildren()
-						if (!children.isEmpty) { // Not a leaf, has children
-							for (si <- children) {
-								si.initializeChildren()
-                createGameTree(si, (d-1))
-							}
-						}
+				if (!children.isEmpty) {          // Not a leaf, has children
+					for (si <- children) {
+              createGameTree(si, (d-1))
+					}
+				}
+        else
+          System.out.println("Leaf")
 			}
 	}
 

@@ -1,4 +1,7 @@
 import java.io.FileNotFoundException
+import util.control.Breaks._
+
+
 import java.io.PrintWriter
 import java.io.UnsupportedEncodingException
 import scala.beans.BeanProperty
@@ -25,7 +28,7 @@ class State(@BeanProperty var player: Player, @BeanProperty var board: Board, @B
 
   def initializeChildren() {
     
-  var moves = board.getPossibleMoves(player.opponent);
+  var moves = board.getPossibleMoves(player);
     
   // Copy the current board, make the next move, and store in the
   // children array. Use ArrayBuffer to append elements to the array
@@ -33,13 +36,21 @@ class State(@BeanProperty var player: Player, @BeanProperty var board: Board, @B
     val childArray = ArrayBuffer[State]()
   
     for (m <- 0 until moves.length) {
-      var b = new Board(board)
-      b.makeMove(moves(m))
-      childArray += new State(player.opponent, b, moves(m))
+      breakable {
+        var b = new Board(board)
+        b.makeMove(moves(m))
+        var winner = b.hasConnectFour()
+        if (winner.isDefined) 
+        {
+          System.out.println("Connet 4" + winner)
+          System.out.println(b.toString())
+          break
+        }
+        System.out.println(b.toString())
+        childArray += new State(player.opponent, b, moves(m))
+      }
     }
     children = childArray.toArray
-    
-    
   }
 
   def writeToFile() {
