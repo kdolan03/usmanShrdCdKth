@@ -1,5 +1,5 @@
 import scala.collection.mutable.ListBuffer
-import scala.collection.mutable.ArrayBuffer
+import annotation.tailrec
 
 class Board {
 
@@ -50,14 +50,18 @@ class Board {
      */
 
   def getPossibleMoves(p: Player): Array[Move] = {
-    val moves = ArrayBuffer[Move]()
-    for (c <- 0 until Board.NUM_COLS){
-          if(board(0)(c) == null) // check the first/topmost entry in the column, if it's null/empty, move is possible
-          moves += new Move(p, c)
+    
+    @tailrec
+    def gpm(column: Int, moves: List[Move]) : Array[Move] = {
+      column match {
+        case Board.NUM_COLS => moves.toArray
+        case _ => gpm(column + 1, moves ::: List(new Move (p,column)))
+      }
     }
-    moves.toArray
+    
+    gpm(0,List[Move]())
   }
-
+  
   override def toString(): String = toString("")
 
   def toString(prefix: String): String = {
