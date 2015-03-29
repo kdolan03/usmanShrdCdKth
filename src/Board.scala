@@ -50,12 +50,14 @@ class Board {
      */
 
   def getPossibleMoves(p: Player): Array[Move] = {
+    if (this.hasConnectFour().isDefined) // if there is a winner, return an empty array 
+      return Array[Move]() 
     
     @tailrec
     def gpm(column: Int, moves: List[Move]) : Array[Move] = {
       column match {
         case Board.NUM_COLS => moves.toArray
-        case _ => gpm(column + 1, moves ::: List(new Move (p,column)))
+        case _ => gpm(column + 1, if(board(0)(column) == null) moves ::: List(new Move (p,column)) else moves) 
       }
     }
     
