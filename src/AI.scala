@@ -1,87 +1,54 @@
-import annotation.tailrec
-
 class AI(private var player: Player, private var depth: Int) extends Solver {
 
   
   /**
-   * Here we will have only 1 preferred move or the 
-   * best move at the current state of board b
+   * Get the best move(s) at the current state of board b
+   * gets the children at the current state of board and finds the move(s) with the maximum value
    */
   override def getMoves(b: Board): Array[Move] = {
-    
-    var s = new State(player, b, new Move(player.opponent, 0))
-    AI.createGameTree(s, depth)
-    if (s.children.length == 0) {   // No moves left, error
-      System.out.println("Error: AI.getMoves state has no children!!")
-      return Array[Move]()
-    }
-    AI.minimax(this, s)
-    
-    var maxValue = -10000000
-    var column = -1
-    
-    System.out.println("KKK: "+ s.children.length)
-    
-    for (i <- 0 to s.children.length - 1) {    // Pick maximum value of children
-      if (s.children(i).value > maxValue) {
-        maxValue = s.children(i).value
-        column = i
-      }
-    }     
-    System.out.println("KKK: "+ column)
-    Array(new Move(player, column))
+    return ???
   }
- 
-  class Node(var state: State, var node: Int)
- 
-  def minimax(s: State) {
 
-    def mm(stack: List[Node]) {
-      
-      if (stack.length > 0) {
-      var ss = stack.head.state  // Save some typing
-      System.out.println(ss.board)
-      System.out.println(ss.children.length)
-      
-      ss.children.length match {
-       
-                 // This is a leaf, so evaluate the board and move back to the parent
-      
-        case 0 => ss.value = evaluateBoard(ss.board)  // Leaf
-                  System.out.println("Leaf:" + ss.value)
-                  var ps = stack.tail                 // Parent   
-                  if (this.player == ss.player) {     // Parent node is opponent, select minimum
-                    if (ss.value < ps.head.state.value) {ps.head.state.value = ss.value}
-                  } else { 
-                    if (ss.value > ps.head.state.value) {ps.head.state.value = ss.value}
-                  }                  
-                  ps.head.node += 1                    // Move to next child
-                  mm(ps)
-                 
-               // Children array size > next node, so still children to traverse
-                 
-         case ln if ln > stack.head.node => System.out.println(stack.head.node)
-              mm(List(new Node(ss.children(stack.head.node), 0)):::stack) 
-                 
   
-         case _ => System.out.println("Kids done")
-                     if (stack.length > 1) {
-                     var ps = stack.tail                 // Parent   
-                     if (this.player == ss.player) {     // Parent node is opponent, select minimum
-                       if (ss.value < ps.head.state.value) {ps.head.state.value = ss.value}
-                     } else { 
-                       if (ss.value > ps.head.state.value) {ps.head.state.value = ss.value}
-                     }                  
-                     ps.head.node += 1                    // Move to next child
-                     mm(ps)                               // Traversed all children
-         }
+  /**
+ * State s is a node of a game tree (i.e. the current State of the game).
+ * Use the Minimax algorithm to assign a numerical value to each State of the
+ * tree rooted at s, indicating how desirable that java.State is to this player.
+ */
+  def minimax(s: State) {
+    def evalLeaf(rs:State) : Unit = {
+      if(!rs.children.isEmpty){        
+        for(childS <- rs.children)
+          evalLeaf(childS)
       }
-    } 
+      else rs.value = this.evaluateBoard(rs.board)
+    }
+    evalLeaf(s)
+    
+    var minValue:Int = 0
+    var maxValue:Int = 0
+    
+    def evalParents(d:Int, depthParam:Int, rs:State) : Unit = {
+      if(d!=depthParam){
+        if(!rs.children.isEmpty){        
+          for(childS <- rs.children)
+            evalParents(d+1,depthParam, childS)
+        }
+      }else{
+          // we are at second last level with leaf children already evaluated
+          if(rs.children != null && rs.children.length > 0)
+            if(d%2==0) maxValue = rs.children(0).value else minValue = rs.children(0).value 
+          for(i <- 0 until rs.children.length){
+            if(d%2==0) maxValue = if(rs.children(i).value > maxValue) rs.children(i).value else maxValue
+            else minValue = if(rs.children(i).value < minValue) rs.children(i).value else minValue
+          }
+          rs.value = if(d%2==0) maxValue else minValue
+        }
     }
     
-    mm(List(new Node(s, 0)))        // Call helper function
-      
-  }
+    for(i <- depth-1 to 0 by -1)
+      evalParents(0,i,s)
+}
 
   /**
    * Evaluate the desirability of Board b for this player
@@ -126,18 +93,17 @@ object AI {
    * <p/>
    * Note: If s has a winner (four in a row), it should be a leaf.
    */
- 
 	def createGameTree(s: State, d: Int) : Unit = {
-			if (d != 0) {                       // Still within depth
+			if (d != 0) {
         s.initializeChildren()
 				var children = s.getChildren()
-				if (!children.isEmpty) {          // Not a leaf, has children
-					for (si <- children) {
-              createGameTree(si, (d-1))
-				}
+						if (!children.isEmpty) { // Not a leaf, has children
+							for (si <- children) {		
+                createGameTree(si, (d-1))
+							}
+						}
 			}
-		}
-  }
+	}
 
   def minimax(ai: AI, s: State) {
     ai.minimax(s)
